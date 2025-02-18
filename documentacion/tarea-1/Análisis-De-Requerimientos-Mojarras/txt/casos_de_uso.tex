@@ -1,0 +1,75 @@
+%Me rifo esto 
+
+\textbf{\large CU1: Registrar un Incidente} \\
+
+\textbf{Actores:} Usuario \\
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+    \item El usuario inicia sesión en la aplicación web \texttt{MojarraDrive}.
+    \item Selecciona la opción "Reportar incidente".
+    \item Ingresa la ubicación del incidente en el mapa interactivo.
+    \item Adjunta una o más fotografías del incidente.
+    \item Clasifica el incidente según sus características
+    \item Escribe una breve descripción del incidente.
+    \item Confirma el registro del incidente.
+    \item El sistema guarda y verifica la información.
+    \item Una vez se haya confirmado la validez del incidente se muestra en el mapa de la aplicación.
+\end{enumerate}
+
+\textbf{Flujo Alternativo:}
+\begin{itemize}
+    \item Si se detecta algún error en la información o falta información obligatoria, el sistema notificará al usuario y solicitará completar o corregir los campos faltantes. De no completarlo correctamente, el incidente no se mostrará en el mapa. 
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{\large CU2: Actualizar Estado de un Incidente} \\
+
+\textbf{Actores:} Usuario \\
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+    \item El usuario inicia sesión en la aplicación web \texttt{MojarraDrive}.
+    \item Busca un incidente en el mapa o en la lista de reportes.
+    \item Selecciona el incidente y elige la opción "Actualizar estado".
+    \item Agrega el nuevo estado del incidente.
+    \item Adjunta evidencia fotográfica del nuevo estado del incidente.
+    \item Confirma la actualización del estado.
+    \item El sistema cambia el estado del incidente y almacena el historial de modificaciones.
+\end{enumerate}
+
+\textbf{Flujo Alternativo:}
+\begin{itemize}
+    \item Si el usuario no adjunta pruebas fotográficas, el sistema rechazará la actualización del estado.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{\large CU3: Visualizar Incidentes} \\
+
+\textbf{Actores:} Usuario \\
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+    \item El usuario accede a la aplicación web \texttt{MojarraDrive}.
+    \item Visualiza un mapa interactivo con incidentes reportados.
+    \item Aplica filtros por tipo de incidente, estado y lugar.
+    \item Selecciona un incidente para ver detalles y fotografías adjuntas.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\textbf{\large CU4: Administración de Incidentes} \\
+
+\textbf{Actores:} Administrador \\
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+    \item El administrador inicia sesión en la aplicación web
+    \texttt{MojarraDrive}.
+    \item Accede al panel de administración.
+    \item Filtra incidentes por tipo o estado.
+    \item Modifica, elimina o marca incidentes como revisados.
+    \item Genera estadísticas sobre incidentes registrados.
+\end{enumerate}
