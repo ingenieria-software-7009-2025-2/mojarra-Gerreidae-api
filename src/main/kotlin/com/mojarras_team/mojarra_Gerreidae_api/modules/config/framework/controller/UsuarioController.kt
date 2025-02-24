@@ -4,6 +4,7 @@ import com.mojarras_team.mojarra_Gerreidae_api.bodies.UserBody
 import com.mojarras_team.mojarra_Gerreidae_api.bodies.UserLogInBody
 import com.mojarras_team.mojarra_Gerreidae_api.models.User
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,7 +39,7 @@ class UsuarioController {
         return ResponseEntity.ok("Sesión Cerrada")
     }
 
-    @PostMapping("/me")
+    @GetMapping("/me")
     fun meUser() : ResponseEntity<User>{
         val miUsuario : User = User(
             mail = "pepe@mail.com",
