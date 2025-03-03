@@ -35,8 +35,8 @@ create table mojarra_esquema.incidente (
 	descripcion varchar(200), 
 	tipo varchar(50) not null, 
 	estado varchar(50) not null, 
-	longitud float(8) not null,
-	latitud float(8) not null, 
+	longitud float8 not null,
+	latitud float8 not null, 
 	fecha date not null
 ); 
 
