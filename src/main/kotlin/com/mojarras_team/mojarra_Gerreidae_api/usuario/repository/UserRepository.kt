@@ -13,5 +13,5 @@ interface UserRepository : CrudRepository<User, Int> {
     fun findByMail(mail: String): User?
 
     @Query(value = "UPDATE usuario SET token = null WHERE idUsuario = ?1", nativeQuery = true)
-    fun deleteToken(inUsuario: Int): User?
+    fun deleteToken(idUsuario: Int): User?
 }
