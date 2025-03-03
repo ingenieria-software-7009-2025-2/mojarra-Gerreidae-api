@@ -1,4 +1,4 @@
-package com.mojarras_team.mojarra_Gerreidae_api.bodies
+package com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies
 
 //Objeto Body para manejar los datos del usuario
 data class UserBody(
@@ -8,5 +8,4 @@ data class UserBody(
     val apellidoM : String = "",
     val mail : String = "",
     val password : String = "",
-    val token : String = ""
 )

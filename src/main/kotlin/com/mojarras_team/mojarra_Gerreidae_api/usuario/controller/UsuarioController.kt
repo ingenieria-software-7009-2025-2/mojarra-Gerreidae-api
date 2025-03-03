@@ -1,6 +1,6 @@
 package com.mojarras_team.mojarra_Gerreidae_api.usuario.controller
 
-import com.mojarras_team.mojarra_Gerreidae_api.bodies.UserBody
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
 import com.mojarras_team.mojarra_Gerreidae_api.models.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.service.UsuarioService
@@ -21,24 +21,22 @@ class UsuarioController {
         val miUsuario : User = User(
             mail = userBody.mail,
             password = userBody.password,
-            token = userBody.token,
             id = userBody.idUsuario,
             nombre = userBody.nombre + userBody.apellidoP + userBody.apellidoM
         )
         return ResponseEntity.ok(miUsuario)
     }
 
+    @PostMapping
+    fun addUser(@RequestBody userBody: UserBody): ResponseEntity<Any> {
+        // Convertir los datos del request a un objeto del dominio
+
+    }
+
     @PostMapping("/login")
     fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
-        val result = userService.login(loginUserBody.mail, loginUserBody.password)
-        val miUsuario : User = User(
-            mail = userLogIn.mail,
-            password = userLogIn.mail,
-            token = "123",
-            id = TODO(),
-            nombre = TODO(),
-        )
-        return ResponseEntity.ok(miUsuario)
+        val result = UsuarioService.login(UserLogInBody.mail, UserLogInBody.password)
+
     }
 
     @PostMapping("/logout")
