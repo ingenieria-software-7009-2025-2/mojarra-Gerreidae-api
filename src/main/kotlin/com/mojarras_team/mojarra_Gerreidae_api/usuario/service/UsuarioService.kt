@@ -9,6 +9,7 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpd
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.full.memberProperties
 
 @Service
@@ -41,12 +42,13 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     fun obtenerUsuario(token : String, usuarioMeBody : UserMeBody) : User? {
 
-        val usuario = usuarioRepo.findById(usuarioMeBody.idUsuario.toInt())
+        val result = usuarioRepo.findById(usuarioMeBody.idUsuario.toInt())
 
-        if (usuario.isEmpty){
+        if (result.isEmpty){
             throw IllegalArgumentException("Este usuario no existe.")
         }
-        if (usuario.get().token == token){
+        val usuario = result.get()
+        if (usuario.token == token){
             return User (
                 IDUsuario = usuario.idUsuario,
                 Nombre = usuario.nombre,
@@ -83,13 +85,13 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     }
 
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
-        val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario.toInt())
-        if (usuarioObtenido.isEmpty){
-            throw IllegalArgumentException("Este usuario no existe")
-        }
-        if(usuarioObtenido.get().Token == null || usuarioObtenido.get().token != token){
+        val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario.toInt()).getOrNull()
+            ?: throw IllegalArgumentException("Este usuario no existe")
+
+        if(usuarioObtenido.token == null || usuarioObtenido.token != token){
             return null
         }
+
         val usuarioObtenidoC = User (
             IDUsuario = usuarioObtenido.idUsuario,
             Nombre = usuarioObtenido.nombre,
@@ -99,9 +101,10 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             Contrasenia = usuarioObtenido.contrasenia,
             Token = usuarioObtenido.token
         )
+
         val valores = mutableMapOf<String, String>()
         for (prop in User::class.memberProperties){
-            valores[prop.name] = prop.get(usuarioObtenidoC.get()).toString() ?: ""
+            valores[prop.name] = prop.get(usuarioObtenidoC).toString() ?: ""
         }
         for (prop in UserUpdateBody::class.memberProperties){
             val nombreCampo = prop.name
@@ -125,6 +128,16 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         )
 
         val resultado = usuarioRepo.save(usuarioActualizado)
-        return  resultado
+
+        val resultadoUsuarioAct = User (
+            IDUsuario = resultado.idUsuario,
+            Nombre = resultado.nombre,
+            ApellidoP = resultado.apellidoP,
+            ApellidoM = resultado.apellidoM,
+            Correo = resultado.correo,
+            Contrasenia = resultado.contrasenia,
+            Token = resultado.token
+        )
+        return  resultadoUsuarioAct
     }
 }
