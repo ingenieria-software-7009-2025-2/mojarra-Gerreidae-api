@@ -1,12 +1,12 @@
 package com.mojarras_team.mojarra_Gerreidae_api.usuario.service
 
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserBody
-import com.mojarras_team.mojarra_Gerreidae_api.models.User
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.repository.UserRepository
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogoutBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserMeBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.reflect.full.memberProperties
@@ -14,18 +14,29 @@ import kotlin.reflect.full.memberProperties
 @Service
 class UsuarioService (private var usuarioRepo : UserRepository) {
 
-    fun crearUsuario(usuarioBody : UserBody) : User {
-        val usuarioDB = User(
-            IDUsuario = usuarioBody.idUsuario,
-            Nombre = usuarioBody.nombre,
-            ApellidoP = usuarioBody.apellidoP,
-            ApellidoM = usuarioBody.apellidoM,
-            Correo = usuarioBody.mail,
-            Contrasenia = usuarioBody.password,
-            Token = UUID.randomUUID().toString()
+    fun crearUsuario(usuario : User) : User {
+
+        val nuevoUsuarioDB = UserEntity(
+            idUsuario = usuario.IDUsuario,
+            nombre = usuario.Nombre,
+            apellidoP = usuario.ApellidoP,
+            apellidoM = usuario.ApellidoM,
+            correo = usuario.Correo,
+            contrasenia = usuario.Contrasenia,
+            token = UUID.randomUUID().toString()
         )
-        val result = usuarioRepo.save(usuarioDB)
-        return usuarioDB
+        val result = usuarioRepo.save(nuevoUsuarioDB)
+
+        val usuarioCreado = User (
+            IDUsuario = result.idUsuario,
+            Nombre = result.nombre,
+            ApellidoP = result.apellidoP,
+            ApellidoM = result.apellidoM,
+            Correo = result.correo,
+            Contrasenia = result.contrasenia,
+            Token = result.token
+        )
+        return usuarioCreado
     }
 
     fun obtenerUsuario(usuarioMeBody : UserMeBody) : User? {
