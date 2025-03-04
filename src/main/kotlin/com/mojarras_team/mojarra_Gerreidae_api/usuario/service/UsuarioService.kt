@@ -61,10 +61,18 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     }
 
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
-        val usuarioObtenido = usuarioRepo.findByMail(usuarioLogInBody.mail)
-            ?: throw IllegalArgumentException("Este usuario no existe")
-        if (usuarioObtenido.contrasenia == usuarioLogInBody.password){
-            return usuarioObtenido
+        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
+            ?: throw IllegalArgumentException("Este usuario no existe.")
+        if (usuario.contrasenia == usuarioLogInBody.password){
+            return User(
+                IDUsuario = usuario.idUsuario,
+                Nombre = usuario.nombre,
+                ApellidoP = usuario.apellidoP,
+                ApellidoM = usuario.apellidoM,
+                Correo = usuario.correo,
+                Contrasenia = usuario.contrasenia,
+                Token = usuario.token
+            )
         }
         return null
     }
@@ -80,28 +88,17 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         if (usuarioObtenido.isEmpty){
             throw IllegalArgumentException("Este usuario no existe")
         }
-        if(usuarioObtenido.get().token == null || usuarioObtenido.get().token != token){
+        if(usuarioObtenido.get().Token == null){
             return null
         }
-        val usuarioObtenidoC = User (
-            IDUsuario = usuarioObtenido.idUsuario,
-            Nombre = usuarioObtenido.nombre,
-            ApellidoP = usuarioObtenido.apellidoP,
-            ApellidoM = usuarioObtenido.apellidoM,
-            Correo = usuarioObtenido.correo,
-            Contrasenia = usuarioObtenido.contrasenia,
-            Token = usuarioObtenido.token
-        )
         val valores = mutableMapOf<String, String>()
         for (prop in User::class.memberProperties){
-            valores[prop.name] = prop.get(usuarioObtenidoC.get()).toString() ?: ""
+            valores[prop.name] = prop.get(usuarioObtenido.get()).toString() ?: ""
         }
         for (prop in UserUpdateBody::class.memberProperties){
             val nombreCampo = prop.name
             val valorCampo = prop.get(usuarioUpdateBody).toString() ?: ""
             if (valorCampo == ""){
-                continue
-            }else{
                 valores[nombreCampo] = valorCampo
             }
 

@@ -39,7 +39,11 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     @PostMapping("/login")
     fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
-        val result = UsuarioService.login(UserLogInBody.mail, UserLogInBody.password)
+        val result = usuarioServicio.logInUsuario(userLogIn)
+        return if (result != null)
+            ResponseEntity.ok(result)
+        else
+            ResponseEntity.notFound().build()
 
     }
 
