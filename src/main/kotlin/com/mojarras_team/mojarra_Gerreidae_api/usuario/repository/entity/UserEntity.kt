@@ -13,21 +13,21 @@ data class UserEntity(
     @Column(name = "idUsuario")
     val idUsuario: Int,
 
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false)
     val nombre: String,
 
-    @Column(name = "apellidoP", nullable = false, length = 50)
+    @Column(name = "apellidoP", nullable = false)
     val apellidoP: String,
 
-    @Column(name = "apellidoM", nullable = false, length = 50)
+    @Column(name = "apellidoM", nullable = false)
     val apellidoM: String,
 
-    @Column(name = "correo", nullable = false, length = 30, unique = true)
+    @Column(name = "correo", nullable = false, unique = true)
     val correo: String,
 
-    @Column(name = "contrasenia", nullable = false, length = 30)
+    @Column(name = "contrasenia", nullable = false)
     val contrasenia: String,
 
-    @Column(name = "token", length = 30)
+    @Column(name = "token")
     val token: String? = null
 )
