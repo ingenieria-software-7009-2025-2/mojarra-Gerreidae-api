@@ -65,7 +65,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         return usuarioObtenido
     }
 
-    fun updateUsuario(usuarioUpdateBody : UserUpdateBody) : User? {
+    fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
         val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario.toInt())
 
         if (usuarioObtenido.isEmpty){
