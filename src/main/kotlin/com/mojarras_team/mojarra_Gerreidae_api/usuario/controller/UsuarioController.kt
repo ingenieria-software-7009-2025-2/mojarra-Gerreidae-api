@@ -1,9 +1,6 @@
 package com.mojarras_team.mojarra_Gerreidae_api.usuario.controller
 
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserMeBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.*
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.service.UsuarioService
 import org.springframework.http.ResponseEntity
@@ -57,20 +54,6 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         else
             ResponseEntity.notFound().build()
 
-    }
-
-    /**
-     * Endpoint para cerrar sesión.
-     * @param token Token de autorización proporcionado en la cabecera.
-     * @return ResponseEntity con mensaje de éxito o error en caso de fallo.
-     */
-    @PostMapping("/logout")
-    fun logOutUser() : ResponseEntity<String>{
-        val salidaExitosa = usuarioServicio.logOutUsuario(userLogout)
-        return if (salidaExitosa > 0)
-            ResponseEntity.ok("La sesión ha finalizado")
-        else
-            ResponseEntity.badRequest().build()
     }
 
     /**
