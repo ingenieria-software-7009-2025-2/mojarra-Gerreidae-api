@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/v1/users")
 class UsuarioController (private var usuarioServicio : UsuarioService) {
 
+
+    /**
+     * Endpoint para crear un nuevo usuario
+     * @param userBody Datos del usuario que recibe la petición
+     * @return ResponseEntity con la respuesta del servicio
+     */
     @PostMapping()
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
 
@@ -37,6 +43,12 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         
     }
 
+
+    /**
+     * Endpoint para iniciar sesión
+     * @param UserLogInBody Datos del usuario (correo y contrasenia) para autenticación.
+     * @return ResponseEntity con la información del usuario si la autenticación es exitosa, o 404 si falla.
+     */
     @PostMapping("/login")
     fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
         val result = usuarioServicio.logInUsuario(userLogIn)
@@ -47,6 +59,11 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     }
 
+    /**
+     * Endpoint para cerrar sesión.
+     * @param token Token de autorización proporcionado en la cabecera.
+     * @return ResponseEntity con mensaje de éxito o error en caso de fallo.
+     */
     @PostMapping("/logout")
     fun logOutUser() : ResponseEntity<String>{
         val salidaExitosa = usuarioServicio.logOutUsuario(userLogout)
@@ -56,18 +73,40 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
             ResponseEntity.badRequest().build()
     }
 
-    @GetMapping("/me")
-    fun meUser(@RequestHeader("Authorization") token : String, @RequestBody userMe : UserMeBody) : ResponseEntity<User>{
+    /**
+     * Endpoint para cerrar sesión.
+     * Recibe un objeto UserLogoutBody (que contiene el id del usuario) y elimina el token.
+     */
+    @PostMapping("/logout")
+    fun logOutUser(@RequestBody userLogout: UserLogoutBody): ResponseEntity<String> {
+        val salidaExitosa = usuarioServicio.logOutUsuario(userLogout)
+        return if (salidaExitosa > 0)
+            ResponseEntity.ok("La sesión ha finalizado")
+        else
+            ResponseEntity.badRequest().build()
+    }
 
+    /**
+     * Endpoint para obtener la información del usuario autenticado.
+     * @param token Token de autorización.
+     * @return ResponseEntity con la información del usuario o un estado 401 si no es válido.
+     */
+    @GetMapping("/me")
+    fun meUser(@RequestHeader("Authorization") token: String, @RequestBody userMe: UserMeBody): ResponseEntity<User> {
         val usuario = usuarioServicio.obtenerUsuario(token, userMe)
         return if (usuario != null)
             ResponseEntity.ok(usuario)
         else
             ResponseEntity.status(401).build()
-
-        return ResponseEntity.ok(usuario)
     }
 
+/**
+ * Endpoint para actualizar la información del usuario autenticado.
+ *
+ * @param token Token de autorización 
+ * @param userUpdate Objeto de tipo UserUpdateBody que contiene los campos a actualizar para el usuario 
+ * @return ResponseEntity con el usuario actualizado o un estado 401 si no es válido.
+ */
     @PutMapping("/me")
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
         val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
