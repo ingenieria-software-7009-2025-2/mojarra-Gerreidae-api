@@ -90,6 +90,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw IllegalArgumentException("Este usuario no existe.")
+        usuario.token = UUID.randomUUID().toString()
+        usuarioRepo.save(usuario)
         if (usuario.contrasenia == usuarioLogInBody.password){
             return User(
                 IDUsuario = usuario.idUsuario,
@@ -111,8 +113,12 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
      */
     fun logOutUsuario(usuarioLogOutBody : UserLogoutBody) : Int {
-        val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
-        return usuarioObtenido
+        val usuarioDb = usuarioRepo.findById(usuarioLogOutBody.idUsuario).get();
+        usuarioDb.token = null;
+        usuarioRepo.save(usuarioDb);
+        //val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
+        //return usuarioObtenido
+        return 1
     }
 
     /**
@@ -130,7 +136,15 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             return null
         }
 
-        val usuarioObtenidoC = User (
+        usuarioObtenido.nombre = usuarioUpdateBody.nombre ?: usuarioObtenido.nombre
+        usuarioObtenido.apellidoP = usuarioUpdateBody.apellidoP ?: usuarioObtenido.apellidoP
+        usuarioObtenido.apellidoM = usuarioUpdateBody.apellidoM ?: usuarioObtenido.apellidoM
+        usuarioObtenido.correo = usuarioUpdateBody.mail ?: usuarioObtenido.correo
+        usuarioObtenido.contrasenia = usuarioUpdateBody.password ?: usuarioObtenido.contrasenia
+
+        usuarioRepo.save(usuarioObtenido)
+
+        val resultadoUsuarioAct = User (
             IDUsuario = usuarioObtenido.idUsuario,
             Nombre = usuarioObtenido.nombre,
             ApellidoP = usuarioObtenido.apellidoP,
@@ -138,43 +152,6 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             Correo = usuarioObtenido.correo,
             Contrasenia = usuarioObtenido.contrasenia,
             Token = usuarioObtenido.token
-        )
-
-        val valores = mutableMapOf<String, String>()
-        for (prop in User::class.memberProperties){
-            valores[prop.name] = prop.get(usuarioObtenidoC).toString() ?: ""
-        }
-        for (prop in UserUpdateBody::class.memberProperties){
-            val nombreCampo = prop.name
-            val valorCampo = prop.get(usuarioUpdateBody).toString() ?: ""
-            if (valorCampo == ""){
-                continue
-            }else {
-                valores[nombreCampo] = valorCampo
-            }
-
-        }
-
-        val usuarioActualizado = UserEntity(
-            idUsuario = valores["IDUsuario"]?.toInt() ?: 0,
-            nombre = valores["Nombre"] ?: "No alcanzable",
-            apellidoP = valores["ApellidoP"] ?: "No alcanzable",
-            apellidoM = valores["ApellidoM"] ?: "No alcanzable",
-            correo = valores["Correo"] ?: "No alcanzable",
-            contrasenia = valores["Contrasenia"] ?: "No alcanzable",
-            token = valores["Token"] ?: "No alcanzable"
-        )
-
-        val resultado = usuarioRepo.save(usuarioActualizado)
-
-        val resultadoUsuarioAct = User (
-            IDUsuario = resultado.idUsuario,
-            Nombre = resultado.nombre,
-            ApellidoP = resultado.apellidoP,
-            ApellidoM = resultado.apellidoM,
-            Correo = resultado.correo,
-            Contrasenia = resultado.contrasenia,
-            Token = resultado.token
         )
         return  resultadoUsuarioAct
     }
