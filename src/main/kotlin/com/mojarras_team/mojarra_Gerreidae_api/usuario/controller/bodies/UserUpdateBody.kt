@@ -7,6 +7,5 @@ data class UserUpdateBody(
     val apellidoP : String = "",
     val apellidoM : String = "",
     val mail : String = "",
-    val password : String = "",
-    val token : String = ""
+    val password : String = ""
 )
