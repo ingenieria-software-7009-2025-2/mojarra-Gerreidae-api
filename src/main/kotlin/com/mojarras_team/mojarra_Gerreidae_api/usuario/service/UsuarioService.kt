@@ -28,7 +28,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun crearUsuario(usuario : User) : User {
 
         val nuevoUsuarioDB = UserEntity(
-            idUsuario = usuario.IDUsuario,
+            idUsuario = 0,
             nombre = usuario.Nombre,
             apellidoP = usuario.ApellidoP,
             apellidoM = usuario.ApellidoM,
