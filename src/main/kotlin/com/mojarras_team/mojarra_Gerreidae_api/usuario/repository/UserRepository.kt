@@ -1,6 +1,6 @@
 package com.mojarras_team.mojarra_Gerreidae_api.repository
 
-import com.mojarras_team.mojarra_Gerreidae_api.models.User
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.User
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
