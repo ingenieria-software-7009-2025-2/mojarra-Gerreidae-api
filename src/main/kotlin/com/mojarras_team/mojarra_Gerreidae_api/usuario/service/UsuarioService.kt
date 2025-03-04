@@ -40,15 +40,24 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     }
 
     fun obtenerUsuario(token : String, usuarioMeBody : UserMeBody) : User? {
-        val usuarioObtenido = usuarioRepo.findById(usuarioMeBody.idUsuario.toInt())
-        if (usuarioObtenido.isEmpty){
+
+        val usuario = usuarioRepo.findById(usuarioMeBody.idUsuario.toInt())
+
+        if (usuario.isEmpty){
             throw IllegalArgumentException("Este usuario no existe.")
         }
-        if (usuarioObtenido.get().token == token){
-            return usuarioObtenido.get()
+        if (usuario.get().token == token){
+            return User (
+                IDUsuario = usuario.idUsuario,
+                Nombre = usuario.nombre,
+                ApellidoP = usuario.apellidoP,
+                ApellidoM = usuario.apellidoM,
+                Correo = usuario.correo,
+                Contrasenia = usuario.contrasenia,
+                Token = usuario.token
+            )
         }
         return null
-
     }
 
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
