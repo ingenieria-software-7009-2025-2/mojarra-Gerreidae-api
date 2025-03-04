@@ -5,12 +5,12 @@ create schema mojarra_esquema;
 -- Creación de la tabla usuario
 create table mojarra_esquema.usuario (
     idUsuario serial not null,
-    nombre varchar(50) not null,
-    apellidoP varchar(50) not null,
-    apellidoM varchar(50) not null,
-    correo varchar(30) not null,
-    contrasenia varchar(30) not null,
-    token varchar(30)
+    nombre text not null,
+    apellidoP text not null,
+    apellidoM text not null,
+    correo text not null,
+    contrasenia text not null,
+    token text
 );
 
 -- Restricciones a la tabla usuario
