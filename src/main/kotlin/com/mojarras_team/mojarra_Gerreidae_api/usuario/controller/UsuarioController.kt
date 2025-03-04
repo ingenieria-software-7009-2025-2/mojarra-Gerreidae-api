@@ -70,6 +70,10 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     @PutMapping("/me")
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
-
+        val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
+        return if (usuarioActualizado != null)
+            ResponseEntity.ok(usuarioActualizado)
+        else
+            ResponseEntity.status(401).build()
     }
 }
