@@ -32,15 +32,9 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         Contrasenia = userBody.password,
         Token = null
         )
-        val creado = usuarioService.addUser(usuario)
+        val creado = usuarioServicio.crearUsuario(usuario)
         return ResponseEntity.ok(creado)
         
-    }
-
-    @PostMapping
-    fun addUser(@RequestBody userBody: UserBody): ResponseEntity<Any> {
-        // Convertir los datos del request a un objeto del dominio
-
     }
 
     @PostMapping("/login")

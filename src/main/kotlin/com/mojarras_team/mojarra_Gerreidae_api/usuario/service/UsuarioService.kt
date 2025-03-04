@@ -63,7 +63,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuarioObtenido = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw IllegalArgumentException("Este usuario no existe")
-        if (usuarioObtenido.Contrasenia == usuarioLogInBody.password){
+        if (usuarioObtenido.contrasenia == usuarioLogInBody.password){
             return usuarioObtenido
         }
         return null
@@ -80,7 +80,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         if (usuarioObtenido.isEmpty){
             throw IllegalArgumentException("Este usuario no existe")
         }
-        if(usuarioObtenido.get().Token == null){
+        if(usuarioObtenido.get().token == null || usuarioObtenido.get().token != token){
             return null
         }
         val valores = mutableMapOf<String, String>()
