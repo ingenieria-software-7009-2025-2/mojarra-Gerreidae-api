@@ -49,7 +49,11 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     @PostMapping("/logout")
     fun logOutUser() : ResponseEntity<String>{
-        return ResponseEntity.ok("Sesión Cerrada")
+        val salidaExitosa = usuarioServicio.logOutUsuario(userLogout)
+        return if (salidaExitosa > 0)
+            ResponseEntity.ok("La sesión ha finalizado")
+        else
+            ResponseEntity.badRequest().build()
     }
 
     @GetMapping("/me")
