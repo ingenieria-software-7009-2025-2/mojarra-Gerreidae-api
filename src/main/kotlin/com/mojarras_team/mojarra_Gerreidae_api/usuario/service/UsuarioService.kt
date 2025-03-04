@@ -84,21 +84,31 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
         val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario.toInt())
-
         if (usuarioObtenido.isEmpty){
             throw IllegalArgumentException("Este usuario no existe")
         }
         if(usuarioObtenido.get().Token == null){
             return null
         }
+        val usuarioObtenidoC = User (
+            IDUsuario = usuarioObtenido.idUsuario,
+            Nombre = usuarioObtenido.nombre,
+            ApellidoP = usuarioObtenido.apellidoP,
+            ApellidoM = usuarioObtenido.apellidoM,
+            Correo = usuarioObtenido.correo,
+            Contrasenia = usuarioObtenido.contrasenia,
+            Token = usuarioObtenido.token
+        )
         val valores = mutableMapOf<String, String>()
         for (prop in User::class.memberProperties){
-            valores[prop.name] = prop.get(usuarioObtenido.get()).toString() ?: ""
+            valores[prop.name] = prop.get(usuarioObtenidoC.get()).toString() ?: ""
         }
         for (prop in UserUpdateBody::class.memberProperties){
             val nombreCampo = prop.name
             val valorCampo = prop.get(usuarioUpdateBody).toString() ?: ""
             if (valorCampo == ""){
+                continue
+            }else {
                 valores[nombreCampo] = valorCampo
             }
 
