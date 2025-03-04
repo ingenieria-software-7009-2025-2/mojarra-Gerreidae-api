@@ -22,13 +22,19 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     @PostMapping()
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
-        val miUsuario : User = User(
-            mail = userBody.mail,
-            password = userBody.password,
-            id = userBody.idUsuario,
-            nombre = userBody.nombre + userBody.apellidoP + userBody.apellidoM
+
+        val usuario = User(
+        IDUsuario = userBody.idUsuario,
+        Nombre = userBody.nombre,
+        ApellidoP = userBody.apellidoP,
+        ApellidoM = userBody.apellidoM,
+        Correo = userBody.mail,
+        Contrasenia = userBody.password,
+        Token = null
         )
-        return ResponseEntity.ok(miUsuario)
+        val creado = usuarioService.addUser(usuario)
+        return ResponseEntity.ok(creado)
+        
     }
 
     @PostMapping
