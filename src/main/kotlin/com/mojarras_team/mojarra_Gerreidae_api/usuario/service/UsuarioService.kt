@@ -61,10 +61,18 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     }
 
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
-        val usuarioObtenido = usuarioRepo.findByMail(usuarioLogInBody.mail)
-            ?: throw IllegalArgumentException("Este usuario no existe")
-        if (usuarioObtenido.Contrasenia == usuarioLogInBody.password){
-            return usuarioObtenido
+        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
+            ?: throw IllegalArgumentException("Este usuario no existe.")
+        if (usuario.contrasenia == usuarioLogInBody.password){
+            return User(
+                IDUsuario = usuario.idUsuario,
+                Nombre = usuario.nombre,
+                ApellidoP = usuario.apellidoP,
+                ApellidoM = usuario.apellidoM,
+                Correo = usuario.correo,
+                Contrasenia = usuario.contrasenia,
+                Token = usuario.token
+            )
         }
         return null
     }
