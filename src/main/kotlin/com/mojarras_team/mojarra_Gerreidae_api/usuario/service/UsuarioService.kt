@@ -87,7 +87,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         if (usuarioObtenido.isEmpty){
             throw IllegalArgumentException("Este usuario no existe")
         }
-        if(usuarioObtenido.get().Token == null){
+        if(usuarioObtenido.get().Token == null || usuarioObtenido.get().token != token){
             return null
         }
         val usuarioObtenidoC = User (
