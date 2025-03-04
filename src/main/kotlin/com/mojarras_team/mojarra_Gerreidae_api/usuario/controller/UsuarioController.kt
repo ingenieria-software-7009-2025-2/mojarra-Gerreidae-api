@@ -47,7 +47,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con la información del usuario si la autenticación es exitosa, o 404 si falla.
      */
     @PostMapping("/login")
-    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
+    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<Any>{
         val result = usuarioServicio.logInUsuario(userLogIn)
         return if (result != null)
             ResponseEntity.ok(result)

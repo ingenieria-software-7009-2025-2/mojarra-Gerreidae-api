@@ -160,7 +160,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = valores["Nombre"] ?: "No alcanzable",
             apellidoP = valores["ApellidoP"] ?: "No alcanzable",
             apellidoM = valores["ApellidoM"] ?: "No alcanzable",
-            correo = valores["ApellidoM"] ?: "No alcanzable",
+            correo = valores["Correo"] ?: "No alcanzable",
             contrasenia = valores["Contrasenia"] ?: "No alcanzable",
             token = valores["Token"] ?: "No alcanzable"
         )

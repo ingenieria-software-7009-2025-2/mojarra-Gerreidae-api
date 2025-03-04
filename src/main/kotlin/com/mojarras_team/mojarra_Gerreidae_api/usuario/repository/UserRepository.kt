@@ -18,16 +18,16 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
      * @param contrasenia contraseña del usuario.
      * @param un User o null si no existe usuario asociado.
      */
-    @Query(value = "SELECT * FROM usuario WHERE correo=?1 AND contrasenia=?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1 AND contrasenia=?2", nativeQuery = true)
     fun findByEmailAndPassword(mail: String, contrasenia: String): UserEntity?
 
     /**
      * Función para obtener un usuario por su correo.
      *
-     * @param mail correo del uduario que quiere encontrar.
+     * @param mail correo del usuario que quiere encontrar.
      * @return un User o null si no se encuentra.
      */
-    @Query(value = "SELECT * FROM usuario WHERE correo=?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1", nativeQuery = true)
     fun findByMail(mail: String): UserEntity?
 
     /**
@@ -38,6 +38,6 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
      * @return número de filas afectadas.
      */
     @Modifying
-    @Query(value = "UPDATE usuario SET token = null WHERE idUsuario = ?1", nativeQuery = true)
+    @Query(value = "UPDATE mojarra_esquema.usuario SET token = null WHERE idUsuario = ?1", nativeQuery = true)
     fun deleteToken(idUsuario: Int): Int
 }
