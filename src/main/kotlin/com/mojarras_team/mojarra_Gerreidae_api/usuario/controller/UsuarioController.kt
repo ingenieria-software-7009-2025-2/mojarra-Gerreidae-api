@@ -64,8 +64,8 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
             ResponseEntity.ok(usuario)
         else
             ResponseEntity.status(401).build()
-        )
-        return ResponseEntity.ok(miUsuario)
+
+        return ResponseEntity.ok(usuario)
     }
 
     @PutMapping("/me")
