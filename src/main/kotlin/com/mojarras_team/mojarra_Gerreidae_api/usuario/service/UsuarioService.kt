@@ -114,14 +114,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
         }
 
-        val usuarioActualizado = User(
-            IDUsuario = valores["IDUsuario"]?.toInt() ?: 0,
-            Nombre = valores["Nombre"] ?: "No alcanzable",
-            ApellidoP = valores["ApellidoP"] ?: "No alcanzable",
-            ApellidoM = valores["ApellidoM"] ?: "No alcanzable",
-            Correo = valores["ApellidoM"] ?: "No alcanzable",
-            Contrasenia = valores["Contrasenia"] ?: "No alcanzable",
-            Token = valores["Token"] ?: "No alcanzable"
+        val usuarioActualizado = UserEntity(
+            idUsuario = valores["IDUsuario"]?.toInt() ?: 0,
+            nombre = valores["Nombre"] ?: "No alcanzable",
+            apellidoP = valores["ApellidoP"] ?: "No alcanzable",
+            apellidoM = valores["ApellidoM"] ?: "No alcanzable",
+            correo = valores["ApellidoM"] ?: "No alcanzable",
+            contrasenia = valores["Contrasenia"] ?: "No alcanzable",
+            token = valores["Token"] ?: "No alcanzable"
         )
 
         val resultado = usuarioRepo.save(usuarioActualizado)
