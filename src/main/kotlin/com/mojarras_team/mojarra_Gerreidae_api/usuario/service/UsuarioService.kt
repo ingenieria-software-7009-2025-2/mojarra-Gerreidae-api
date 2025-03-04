@@ -83,14 +83,25 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         if(usuarioObtenido.get().token == null || usuarioObtenido.get().token != token){
             return null
         }
+        val usuarioObtenidoC = User (
+            IDUsuario = usuarioObtenido.idUsuario,
+            Nombre = usuarioObtenido.nombre,
+            ApellidoP = usuarioObtenido.apellidoP,
+            ApellidoM = usuarioObtenido.apellidoM,
+            Correo = usuarioObtenido.correo,
+            Contrasenia = usuarioObtenido.contrasenia,
+            Token = usuarioObtenido.token
+        )
         val valores = mutableMapOf<String, String>()
         for (prop in User::class.memberProperties){
-            valores[prop.name] = prop.get(usuarioObtenido.get()).toString() ?: ""
+            valores[prop.name] = prop.get(usuarioObtenidoC.get()).toString() ?: ""
         }
         for (prop in UserUpdateBody::class.memberProperties){
             val nombreCampo = prop.name
             val valorCampo = prop.get(usuarioUpdateBody).toString() ?: ""
             if (valorCampo == ""){
+                continue
+            }else{
                 valores[nombreCampo] = valorCampo
             }
 
