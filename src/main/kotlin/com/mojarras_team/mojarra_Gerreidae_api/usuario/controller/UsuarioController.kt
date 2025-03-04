@@ -2,19 +2,23 @@ package com.mojarras_team.mojarra_Gerreidae_api.usuario.controller
 
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
-import com.mojarras_team.mojarra_Gerreidae_api.models.User
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserMeBody
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
+import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.service.UsuarioService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
 @RequestMapping("/v1/users")
-class UsuarioController {
+class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     @PostMapping()
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
@@ -45,12 +49,17 @@ class UsuarioController {
     }
 
     @GetMapping("/me")
-    fun meUser() : ResponseEntity<User>{
+    fun meUser(@RequestHeader("Authorization") token : String, @RequestBody userMe : UserMeBody) : ResponseEntity<User>{
         val miUsuario : User = User(
             mail = "pepe@mail.com",
             password = "123",
             token = "456"
         )
         return ResponseEntity.ok(miUsuario)
+    }
+
+    @PutMapping("/me")
+    fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
+
     }
 }
