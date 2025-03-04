@@ -7,7 +7,7 @@ import jakarta.persistence.*
  */
 @Entity
 @Table(name = "usuario", schema = "mojarra_esquema")
-data class User(
+data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idUsuario")

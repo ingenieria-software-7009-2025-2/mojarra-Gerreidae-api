@@ -1,4 +1,4 @@
-package com.mojarras_team.mojarra_Gerreidae_api.models
+package com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio
 
 data class User(
     var IDUsuario:  Int = -1,
