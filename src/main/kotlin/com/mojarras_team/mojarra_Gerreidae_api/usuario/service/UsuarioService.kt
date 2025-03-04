@@ -12,9 +12,19 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.full.memberProperties
 
+/**
+ * Clase para manejar la lógica del las peticiones HTTP relacionadas
+ * a la tabla Usuario.
+ */
 @Service
 class UsuarioService (private var usuarioRepo : UserRepository) {
 
+    /**
+     * Crea un nuevo usuario en la base de datos.
+     *
+     * @param usuario Nuevo usuario a agregar.
+     * @return El susuario que se creó.
+     */
     fun crearUsuario(usuario : User) : User {
 
         val nuevoUsuarioDB = UserEntity(
@@ -40,6 +50,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         return usuarioCreado
     }
 
+    /**
+     * Función para obtener los datos de un usuario mediante su id y un token.
+     * Es necesario que el token corresponda al del usuario que se quiere consultar.
+     *
+     * @param token un token para verificar que se haya iniciado sesión.
+     * @param usuarioMeBody objeto que contiene el id del usuario que se quiere consultar.
+     * @return la información del usuario consultado o null si el token no es válido.
+     */
     fun obtenerUsuario(token : String, usuarioMeBody : UserMeBody) : User? {
 
         val result = usuarioRepo.findById(usuarioMeBody.idUsuario.toInt())
@@ -62,6 +80,13 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         return null
     }
 
+    /**
+     * Función para hacer el login de un usuario por medeio de su
+     * correo y contraseña.
+     *
+     * @param usuarioLogInBody objeto con el correo y contraseña.
+     * @return el usuario que realizó el login o null si la contraseña es incorrecta.
+     */
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw IllegalArgumentException("Este usuario no existe.")
@@ -79,11 +104,24 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         return null
     }
 
+    /**
+     * Función para hacer el logout del usuario mediante su id.
+     *
+     * @param usuarioLogOutBody coneirne el id.
+     * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
+     */
     fun logOutUsuario(usuarioLogOutBody : UserLogoutBody) : Int {
         val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
         return usuarioObtenido
     }
 
+    /**
+     * Función para actualizar un usuario mediante su id.
+     * Se verifica su token.
+     *
+     * @param token el token del usuario a modificar.
+     * @param usuarioUpdateBody objeto con el id del usuario a actualizar.
+     */
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
         val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario.toInt()).getOrNull()
             ?: throw IllegalArgumentException("Este usuario no existe")
