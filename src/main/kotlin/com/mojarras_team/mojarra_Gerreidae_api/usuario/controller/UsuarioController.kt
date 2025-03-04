@@ -83,13 +83,13 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
             ResponseEntity.status(401).build()
     }
 
-/**
- * Endpoint para actualizar la información del usuario autenticado.
- *
- * @param token Token de autorización 
- * @param userUpdate Objeto de tipo UserUpdateBody que contiene los campos a actualizar para el usuario 
- * @return ResponseEntity con el usuario actualizado o un estado 401 si no es válido.
- */
+    /**
+     * Endpoint para actualizar la información del usuario autenticado.
+     *
+     * @param token Token de autorización
+     * @param userUpdate Objeto de tipo UserUpdateBody que contiene los campos a actualizar para el usuario
+     * @return ResponseEntity con el usuario actualizado o un estado 401 si no es válido.
+     */
     @PutMapping("/me")
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
         val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
