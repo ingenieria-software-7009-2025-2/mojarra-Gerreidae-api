@@ -32,9 +32,9 @@ comment on column mojarra_esquema.usuario.token is 'Token de autenticación del 
 create table mojarra_esquema.incidente (
 	IDIncidente serial not null,
 	IDUsuario serial not null,
-	descripcion varchar(200), 
-	tipo varchar(50) not null, 
-	estado varchar(50) not null, 
+	descripcion text, 
+	tipo text not null, 
+	estado text not null, 
 	longitud float8 not null,
 	latitud float8 not null, 
 	fecha date not null
@@ -52,7 +52,7 @@ on update cascade on delete no action;
 --Creación de la tabla imagen_incidente
 create table mojarra_esquema.imagen_incidente (
 	IDIncidente serial not null, 
-	IDImagen varchar(50) not null,
+	IDImagen text not null,
 	Imagen OID not null
 ); 
 -- Restricciones a la tabla imagen_incidente
@@ -69,9 +69,9 @@ create table mojarra_esquema.actualizacion (
 	IDActualizacion serial not null,
 	IDUsuario serial not null,
 	IDIncidente serial not null,
-	NuevoEstado varchar(50) not null, 
+	NuevoEstado text not null, 
 	fecha date not null, 
-	descripción varchar(200)
+	descripción text
 ); 
 
 -- Restricciones de la tabla actualización.
@@ -91,7 +91,7 @@ on update cascade on delete no action;
 --Creación de la tabla imagen actualización
 create table mojarra_esquema.imagen_actualizacion (
 	IDActualizacion serial not null, 
-	IDImagenAct varchar(50) not null,
+	IDImagenAct text not null,
 	Imagen OID not null
 );
 
