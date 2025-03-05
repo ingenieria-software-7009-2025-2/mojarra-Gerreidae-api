@@ -14,20 +14,20 @@ data class UserEntity(
     val idUsuario: Int,
 
     @Column(name = "nombre", nullable = false)
-    val nombre: String,
+    var nombre: String,
 
     @Column(name = "apellidoP", nullable = false)
-    val apellidoP: String,
+    var apellidoP: String,
 
     @Column(name = "apellidoM", nullable = false)
-    val apellidoM: String,
+    var apellidoM: String,
 
     @Column(name = "correo", nullable = false, unique = true)
-    val correo: String,
+    var correo: String,
 
     @Column(name = "contrasenia", nullable = false)
-    val contrasenia: String,
+    var contrasenia: String,
 
     @Column(name = "token")
-    val token: String? = null
+    var token: String? = null
 )
