@@ -1,7 +1,6 @@
-package com.mojarras_team.mojarra_Gerreidae_api.repository
+package com.mojarras_team.mojarra_Gerreidae_api.usuario.repository
 
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
@@ -16,7 +15,7 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
      *
      * @param mail correo del usuario.
      * @param contrasenia contraseña del usuario.
-     * @param un User o null si no existe usuario asociado.
+     * @return un User o null si no existe usuario asociado.
      */
     @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1 AND contrasenia=?2", nativeQuery = true)
     fun findByEmailAndPassword(mail: String, contrasenia: String): UserEntity?
@@ -29,15 +28,4 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
      */
     @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1", nativeQuery = true)
     fun findByMail(mail: String): UserEntity?
-
-    /**
-     * Función para establecer el token del usuario con el id indicado
-     * como null.
-     *
-     * @param idUsuario el ID del usuario al que se le quiere borrar el token.
-     * @return número de filas afectadas.
-     */
-    @Modifying
-    @Query(value = "UPDATE mojarra_esquema.usuario SET token = null WHERE idUsuario = ?1", nativeQuery = true)
-    fun deleteToken(idUsuario: Int): Int
 }
