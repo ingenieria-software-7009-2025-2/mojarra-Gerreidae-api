@@ -23,9 +23,18 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     /**
      * Función para obtener un usuario por su correo.
      *
-     * @param mail correo del usuario que quiere encontrar.
+     * @param mail correo del usuario que se quiere encontrar.
      * @return un User o null si no se encuentra.
      */
     @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1", nativeQuery = true)
     fun findByMail(mail: String): UserEntity?
+
+    /**
+     * Función para obtener un usuario por su token.
+     *
+     * @param token del usuario que se quiere encontrar.
+     * @return un User o null si no se encuentra.
+     */
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE token=?1", nativeQuery = true)
+    fun findByToken(token: String): UserEntity?
 }
