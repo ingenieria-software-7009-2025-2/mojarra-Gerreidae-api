@@ -1,10 +1,10 @@
 package com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio
 
 class  Actualizacion (
-    var IDActualizacion:  Int = -1,
-    var IDUsuario: Int ,
-    var IDIncidente: Int ,
-    var NuevoEstado: String = "",
-    var Fecha: String = "",
-    var Descripcion: String = ""
+    var idActualizacion:  Int = -1,
+    var idUsuario: Int,
+    var idIncidente: Int,
+    var nuevoEstado: String = "",
+    var fecha: String = "",
+    var descripcion: String = ""
 )
