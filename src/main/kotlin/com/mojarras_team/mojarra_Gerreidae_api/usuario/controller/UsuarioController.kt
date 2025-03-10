@@ -27,13 +27,13 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
 
         val usuario = User(
-        IDUsuario = userBody.idUsuario,
-        Nombre = userBody.nombre,
-        ApellidoP = userBody.apellidoP,
-        ApellidoM = userBody.apellidoM,
-        Correo = userBody.mail,
-        Contrasenia = userBody.password,
-        Token = null
+        idUsuario = userBody.idUsuario,
+        nombre = userBody.nombre,
+        apellidoP = userBody.apellidoP,
+        apellidoM = userBody.apellidoM,
+        correo = userBody.mail,
+        contrasenia = userBody.password,
+        token = null
         )
         val creado = usuarioServicio.crearUsuario(usuario)
         return ResponseEntity.ok(creado)

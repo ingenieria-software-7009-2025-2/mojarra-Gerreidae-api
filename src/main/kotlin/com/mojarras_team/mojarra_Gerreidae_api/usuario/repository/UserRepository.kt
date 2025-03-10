@@ -1,7 +1,6 @@
-package com.mojarras_team.mojarra_Gerreidae_api.repository
+package com.mojarras_team.mojarra_Gerreidae_api.usuario.repository
 
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
@@ -16,7 +15,7 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
      *
      * @param mail correo del usuario.
      * @param contrasenia contraseña del usuario.
-     * @param un User o null si no existe usuario asociado.
+     * @return un User o null si no existe usuario asociado.
      */
     @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1 AND contrasenia=?2", nativeQuery = true)
     fun findByEmailAndPassword(mail: String, contrasenia: String): UserEntity?
@@ -24,20 +23,18 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     /**
      * Función para obtener un usuario por su correo.
      *
-     * @param mail correo del usuario que quiere encontrar.
+     * @param mail correo del usuario que se quiere encontrar.
      * @return un User o null si no se encuentra.
      */
     @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1", nativeQuery = true)
     fun findByMail(mail: String): UserEntity?
 
     /**
-     * Función para establecer el token del usuario con el id indicado
-     * como null.
+     * Función para obtener un usuario por su token.
      *
-     * @param idUsuario el ID del usuario al que se le quiere borrar el token.
-     * @return número de filas afectadas.
+     * @param token del usuario que se quiere encontrar.
+     * @return un User o null si no se encuentra.
      */
-    @Modifying
-    @Query(value = "UPDATE mojarra_esquema.usuario SET token = null WHERE idUsuario = ?1", nativeQuery = true)
-    fun deleteToken(idUsuario: Int): Int
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE token=?1", nativeQuery = true)
+    fun findByToken(token: String): UserEntity?
 }
