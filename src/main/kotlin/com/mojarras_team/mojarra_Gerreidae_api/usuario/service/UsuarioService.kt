@@ -4,7 +4,6 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.UserRepository
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogoutBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserMeBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
@@ -57,9 +56,9 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param usuarioMeBody objeto que contiene el id del usuario que se quiere consultar.
      * @return la información del usuario consultado o null si el token no es válido.
      */
-    fun obtenerUsuario(token : String, usuarioMeBody : UserMeBody) : User? {
+    fun obtenerUsuario(token : String) : User? {
 
-        val result = usuarioRepo.findById(usuarioMeBody.idUsuario)
+        val result = usuarioRepo.findByToken(token)
 
         if (result.isEmpty){
             throw IllegalArgumentException("Este usuario no existe.")

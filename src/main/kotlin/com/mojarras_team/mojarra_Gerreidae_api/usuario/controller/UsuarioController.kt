@@ -75,8 +75,8 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con la información del usuario o un estado 401 si no es válido.
      */
     @GetMapping("/me")
-    fun meUser(@RequestHeader("Authorization") token: String, @RequestBody userMe: UserMeBody): ResponseEntity<User> {
-        val usuario = usuarioServicio.obtenerUsuario(token, userMe)
+    fun meUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
+        val usuario = usuarioServicio.obtenerUsuario(token)
         return if (usuario != null)
             ResponseEntity.ok(usuario)
         else
