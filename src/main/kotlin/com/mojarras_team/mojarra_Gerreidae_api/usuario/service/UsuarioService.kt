@@ -3,7 +3,6 @@ package com.mojarras_team.mojarra_Gerreidae_api.usuario.service
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.UserRepository
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogoutBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
@@ -24,6 +23,11 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @return El susuario que se creó.
      */
     fun crearUsuario(usuario : User) : User {
+
+        do{
+            val token = UUID.randomUUID().toString()
+            val usuario = usuarioRepo.findByToken(token)
+        }while (usuario != null)
 
         val nuevoUsuarioDB = UserEntity(
             idUsuario = 0,
@@ -58,7 +62,6 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun obtenerUsuario(token : String) : User? {
 
         val usuario = usuarioRepo.findByToken(token)
-
 
         return if (usuario != null){
             User (
@@ -107,10 +110,12 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param usuarioLogOutBody coneirne el id.
      * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
      */
-    fun logOutUsuario(usuarioLogOutBody : UserLogoutBody) : Int {
-        val usuarioDb = usuarioRepo.findById(usuarioLogOutBody.idUsuario).get()
-        usuarioDb.token = null
-        usuarioRepo.save(usuarioDb)
+    fun logOutUsuario(token: String) : Int {
+        val usuarioDb = usuarioRepo.findByToken(token)
+        if (usuarioDb != null) {
+            usuarioDb.token = null
+            usuarioRepo.save(usuarioDb)
+        }
         //val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
         //return usuarioObtenido
         return 1

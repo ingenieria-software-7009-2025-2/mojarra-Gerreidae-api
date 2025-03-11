@@ -61,8 +61,8 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * Recibe un objeto UserLogoutBody (que contiene el id del usuario) y elimina el token.
      */
     @PostMapping("/logout")
-    fun logOutUser(@RequestBody userLogout: UserLogoutBody): ResponseEntity<String> {
-        val salidaExitosa = usuarioServicio.logOutUsuario(userLogout)
+    fun logOutUser(@RequestHeader("Authorization") token: String): ResponseEntity<String> {
+        val salidaExitosa = usuarioServicio.logOutUsuario(token)
         return if (salidaExitosa > 0)
             ResponseEntity.ok("La sesión ha finalizado")
         else
