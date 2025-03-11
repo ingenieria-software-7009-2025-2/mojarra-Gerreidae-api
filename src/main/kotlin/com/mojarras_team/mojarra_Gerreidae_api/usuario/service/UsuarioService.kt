@@ -120,10 +120,9 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         if (usuarioDb != null) {
             usuarioDb.token = null
             usuarioRepo.save(usuarioDb)
+            return 1
         }
-        //val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
-        //return usuarioObtenido
-        return 1
+        return 0
     }
 
     /**
