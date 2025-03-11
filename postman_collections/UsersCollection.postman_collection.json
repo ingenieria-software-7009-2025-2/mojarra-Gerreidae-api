@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "90256deb-7d9d-4737-81b3-30b3d877fb1a",
-		"name": "CollectionMojarra Copy 6",
+		"_postman_id": "259509b5-419b-4ca5-88cd-97087a7ad98b",
+		"name": "UsersCollection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "42445722"
+		"_exporter_id": "38749907"
 	},
 	"item": [
 		{
@@ -75,13 +75,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "a082a7f9-6bf4-4916-a696-c02715649ff2",
+						"value": "11af2793-aadf-4e95-a187-7b61792dcc48",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"idUsuario\": \"1\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -111,7 +111,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "a082a7f9-6bf4-4916-a696-c02715649ff2",
+						"value": "11af2793-aadf-4e95-a187-7b61792dcc48",
 						"type": "text"
 					}
 				],
@@ -144,10 +144,16 @@
 			"name": "/users/logout Post logOutUser",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "11af2793-aadf-4e95-a187-7b61792dcc48",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"idUsuario\": 1\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
