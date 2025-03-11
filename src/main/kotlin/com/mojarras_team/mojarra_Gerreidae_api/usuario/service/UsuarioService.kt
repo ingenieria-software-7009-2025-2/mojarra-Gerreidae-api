@@ -113,8 +113,6 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     /**
      * Función para hacer el logout del usuario mediante su id.
-     *
-     * @param usuarioLogOutBody coneirne el id.
      * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
      */
     fun logOutUsuario(token: String) : Int {
