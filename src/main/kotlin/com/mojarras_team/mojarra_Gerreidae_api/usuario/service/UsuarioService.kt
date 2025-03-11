@@ -20,14 +20,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * Crea un nuevo usuario en la base de datos.
      *
      * @param usuario Nuevo usuario a agregar.
-     * @return El susuario que se creó.
+     * @return El usuario que se creó.
      */
     fun crearUsuario(usuario : User) : User {
 
-        do{
-            val token = UUID.randomUUID().toString()
-            val usuario = usuarioRepo.findByToken(token)
-        }while (usuario != null)
+        var tokenNoRepetido: String
+        do {
+            tokenNoRepetido = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(tokenNoRepetido) != null)
 
         val nuevoUsuarioDB = UserEntity(
             idUsuario = 0,
@@ -36,7 +36,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             apellidoM = usuario.apellidoM,
             correo = usuario.correo,
             contrasenia = usuario.contrasenia,
-            token = UUID.randomUUID().toString()
+            token = tokenNoRepetido
         )
         val result = usuarioRepo.save(nuevoUsuarioDB)
 
@@ -88,8 +88,15 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw IllegalArgumentException("Este usuario no existe.")
-        usuario.token = UUID.randomUUID().toString()
+
+        var token: String
+        do {
+            token = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(token) != null)
+
+        usuario.token = token
         usuarioRepo.save(usuario)
+
         if (usuario.contrasenia == usuarioLogInBody.password){
             return User(
                 idUsuario = usuario.idUsuario,
