@@ -3,8 +3,6 @@ package com.mojarras_team.mojarra_Gerreidae_api.usuario.service
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.UserRepository
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogoutBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserMeBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
@@ -22,9 +20,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * Crea un nuevo usuario en la base de datos.
      *
      * @param usuario Nuevo usuario a agregar.
-     * @return El susuario que se creó.
+     * @return El usuario que se creó.
      */
     fun crearUsuario(usuario : User) : User {
+
+        var tokenNoRepetido: String
+        do {
+            tokenNoRepetido = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(tokenNoRepetido) != null)
 
         val nuevoUsuarioDB = UserEntity(
             idUsuario = 0,
@@ -33,7 +36,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             apellidoM = usuario.apellidoM,
             correo = usuario.correo,
             contrasenia = usuario.contrasenia,
-            token = UUID.randomUUID().toString()
+            token = tokenNoRepetido
         )
         val result = usuarioRepo.save(nuevoUsuarioDB)
 
@@ -54,19 +57,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * Es necesario que el token corresponda al del usuario que se quiere consultar.
      *
      * @param token un token para verificar que se haya iniciado sesión.
-     * @param usuarioMeBody objeto que contiene el id del usuario que se quiere consultar.
      * @return la información del usuario consultado o null si el token no es válido.
      */
-    fun obtenerUsuario(token : String, usuarioMeBody : UserMeBody) : User? {
+    fun obtenerUsuario(token : String) : User? {
 
-        val result = usuarioRepo.findById(usuarioMeBody.idUsuario)
+        val usuario = usuarioRepo.findByToken(token)
 
-        if (result.isEmpty){
-            throw IllegalArgumentException("Este usuario no existe.")
-        }
-        val usuario = result.get()
-        if (usuario.token == token){
-            return User (
+        return if (usuario != null){
+            User (
                 idUsuario = usuario.idUsuario,
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
@@ -75,8 +73,9 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 contrasenia = usuario.contrasenia,
                 token = usuario.token
             )
+        } else {
+            null
         }
-        return null
     }
 
     /**
@@ -89,8 +88,15 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw IllegalArgumentException("Este usuario no existe.")
-        usuario.token = UUID.randomUUID().toString()
+
+        var token: String
+        do {
+            token = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(token) != null)
+
+        usuario.token = token
         usuarioRepo.save(usuario)
+
         if (usuario.contrasenia == usuarioLogInBody.password){
             return User(
                 idUsuario = usuario.idUsuario,
@@ -107,17 +113,16 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     /**
      * Función para hacer el logout del usuario mediante su id.
-     *
-     * @param usuarioLogOutBody coneirne el id.
      * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
      */
-    fun logOutUsuario(usuarioLogOutBody : UserLogoutBody) : Int {
-        val usuarioDb = usuarioRepo.findById(usuarioLogOutBody.idUsuario).get()
-        usuarioDb.token = null
-        usuarioRepo.save(usuarioDb)
-        //val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
-        //return usuarioObtenido
-        return 1
+    fun logOutUsuario(token: String) : Int {
+        val usuarioDb = usuarioRepo.findByToken(token)
+        if (usuarioDb != null) {
+            usuarioDb.token = null
+            usuarioRepo.save(usuarioDb)
+            return 1
+        }
+        return 0
     }
 
     /**
