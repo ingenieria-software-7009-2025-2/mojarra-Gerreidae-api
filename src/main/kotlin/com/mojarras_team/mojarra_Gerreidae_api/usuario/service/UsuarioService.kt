@@ -53,19 +53,15 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * Es necesario que el token corresponda al del usuario que se quiere consultar.
      *
      * @param token un token para verificar que se haya iniciado sesión.
-     * @param usuarioMeBody objeto que contiene el id del usuario que se quiere consultar.
      * @return la información del usuario consultado o null si el token no es válido.
      */
     fun obtenerUsuario(token : String) : User? {
 
-        val result = usuarioRepo.findByToken(token)
+        val usuario = usuarioRepo.findByToken(token)
 
-        if (result.isEmpty){
-            throw IllegalArgumentException("Este usuario no existe.")
-        }
-        val usuario = result.get()
-        if (usuario.token == token){
-            return User (
+
+        return if (usuario != null){
+            User (
                 idUsuario = usuario.idUsuario,
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
@@ -74,8 +70,9 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 contrasenia = usuario.contrasenia,
                 token = usuario.token
             )
+        } else {
+            null
         }
-        return null
     }
 
     /**
