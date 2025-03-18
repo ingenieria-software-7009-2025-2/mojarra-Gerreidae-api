@@ -11,22 +11,22 @@ import org.springframework.data.repository.CrudRepository
 interface UserRepository : CrudRepository<UserEntity, Int> {
 
     /**
-     * Función para obtener un usuario por su correo y contraseña.
+     * Función para obtener un usuario por su mail y password.
      *
-     * @param mail correo del usuario.
-     * @param contrasenia contraseña del usuario.
+     * @param mail mail del usuario.
+     * @param password password del usuario.
      * @return un User o null si no existe usuario asociado.
      */
-    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1 AND contrasenia=?2", nativeQuery = true)
-    fun findByEmailAndPassword(mail: String, contrasenia: String): UserEntity?
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE mail=?1 AND password=?2", nativeQuery = true)
+    fun findByEmailAndPassword(mail: String, password: String): UserEntity?
 
     /**
-     * Función para obtener un usuario por su correo.
+     * Función para obtener un usuario por su mail.
      *
-     * @param mail correo del usuario que se quiere encontrar.
+     * @param mail mail del usuario que se quiere encontrar.
      * @return un User o null si no se encuentra.
      */
-    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE correo=?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM mojarra_esquema.usuario WHERE mail=?1", nativeQuery = true)
     fun findByMail(mail: String): UserEntity?
 
     /**

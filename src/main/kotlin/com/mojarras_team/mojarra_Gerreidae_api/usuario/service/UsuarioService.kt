@@ -34,8 +34,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = usuario.nombre,
             apellidoP = usuario.apellidoP,
             apellidoM = usuario.apellidoM,
-            correo = usuario.correo,
-            contrasenia = usuario.contrasenia,
+            mail = usuario.mail,
+            password = usuario.password,
             token = tokenNoRepetido
         )
         val result = usuarioRepo.save(nuevoUsuarioDB)
@@ -45,8 +45,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = result.nombre,
             apellidoP = result.apellidoP,
             apellidoM = result.apellidoM,
-            correo = result.correo,
-            contrasenia = result.contrasenia,
+            mail = result.mail,
+            password = result.password,
             token = result.token
         )
         return usuarioCreado
@@ -69,8 +69,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
                 apellidoM = usuario.apellidoM,
-                correo = usuario.correo,
-                contrasenia = usuario.contrasenia,
+                mail = usuario.mail,
+                password = usuario.password,
                 token = usuario.token
             )
         } else {
@@ -80,10 +80,10 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     /**
      * Función para hacer el login de un usuario por medeio de su
-     * correo y contraseña.
+     * mail y password.
      *
-     * @param usuarioLogInBody objeto con el correo y contraseña.
-     * @return el usuario que realizó el login o null si la contraseña es incorrecta.
+     * @param usuarioLogInBody objeto con el mail y password.
+     * @return el usuario que realizó el login o null si la password es incorrecta.
      */
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
@@ -97,14 +97,14 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         usuario.token = token
         usuarioRepo.save(usuario)
 
-        if (usuario.contrasenia == usuarioLogInBody.password){
+        if (usuario.password == usuarioLogInBody.password){
             return User(
                 idUsuario = usuario.idUsuario,
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
                 apellidoM = usuario.apellidoM,
-                correo = usuario.correo,
-                contrasenia = usuario.contrasenia,
+                mail = usuario.mail,
+                password = usuario.password,
                 token = usuario.token
             )
         }
@@ -143,8 +143,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         usuarioObtenido.nombre = usuarioUpdateBody.nombre ?: usuarioObtenido.nombre
         usuarioObtenido.apellidoP = usuarioUpdateBody.apellidoP ?: usuarioObtenido.apellidoP
         usuarioObtenido.apellidoM = usuarioUpdateBody.apellidoM ?: usuarioObtenido.apellidoM
-        usuarioObtenido.correo = usuarioUpdateBody.mail ?: usuarioObtenido.correo
-        usuarioObtenido.contrasenia = usuarioUpdateBody.password ?: usuarioObtenido.contrasenia
+        usuarioObtenido.mail = usuarioUpdateBody.mail ?: usuarioObtenido.mail
+        usuarioObtenido.password = usuarioUpdateBody.password ?: usuarioObtenido.password
 
         usuarioRepo.save(usuarioObtenido)
 
@@ -153,8 +153,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = usuarioObtenido.nombre,
             apellidoP = usuarioObtenido.apellidoP,
             apellidoM = usuarioObtenido.apellidoM,
-            correo = usuarioObtenido.correo,
-            contrasenia = usuarioObtenido.contrasenia,
+            mail = usuarioObtenido.mail,
+            password = usuarioObtenido.password,
             token = usuarioObtenido.token
         )
         return  resultadoUsuarioAct

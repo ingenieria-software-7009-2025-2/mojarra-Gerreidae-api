@@ -5,7 +5,7 @@ data class User(
     var nombre: String,
     var apellidoP: String,
     var apellidoM: String,
-    var correo: String,
-    var contrasenia: String,
+    var mail: String,
+    var password: String,
     var token:String? = null
 )
