@@ -8,8 +8,8 @@ create table mojarra_esquema.usuario (
     nombre text not null,
     apellidoP text not null,
     apellidoM text not null,
-    correo text not null,
-    contrasenia text not null,
+    mail text not null,
+    password text not null,
     token text
 );
 
@@ -18,14 +18,14 @@ alter table mojarra_esquema.usuario
 add constraint pk_usuario primary key (idUsuario);
 
 alter table mojarra_esquema.usuario
-add constraint uq_usuario_correo unique (correo),
-add constraint chk_usuario_correo_format check (correo like '%@%');
+add constraint uq_usuario_mail unique (mail),
+add constraint chk_usuario_mail_format check (mail like '%@%');
 
 -- Comentarios para la tabla y columnas
 comment on table mojarra_esquema.usuario is 'Tabla que almacena la información de los usuarios en la aplicación.';
 comment on column mojarra_esquema.usuario.idUsuario is 'Identificador único del usuario.';
-comment on column mojarra_esquema.usuario.correo is 'Correo electrónico del usuario. Debe ser único y contener un formato válido.';
-comment on column mojarra_esquema.usuario.contrasenia is 'Contraseña del usuario.';
+comment on column mojarra_esquema.usuario.mail is 'mail electrónico del usuario. Debe ser único y contener un formato válido.';
+comment on column mojarra_esquema.usuario.password is 'password del usuario.';
 comment on column mojarra_esquema.usuario.token is 'Token de autenticación del usuario.';
 
 -- Creación de la tabla incidente

@@ -22,11 +22,11 @@ data class UserEntity(
     @Column(name = "apellidoM", nullable = false)
     var apellidoM: String,
 
-    @Column(name = "correo", nullable = false, unique = true)
-    var correo: String,
+    @Column(name = "mail", nullable = false, unique = true)
+    var mail: String,
 
-    @Column(name = "contrasenia", nullable = false)
-    var contrasenia: String,
+    @Column(name = "password", nullable = false)
+    var password: String,
 
     @Column(name = "token")
     var token: String? = null

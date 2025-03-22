@@ -31,8 +31,8 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         nombre = userBody.nombre,
         apellidoP = userBody.apellidoP,
         apellidoM = userBody.apellidoM,
-        correo = userBody.mail,
-        contrasenia = userBody.password,
+        mail = userBody.mail,
+        password = userBody.password,
         token = null
         )
         val creado = usuarioServicio.crearUsuario(usuario)
@@ -43,7 +43,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
 
     /**
      * Endpoint para iniciar sesión
-     * @param UserLogInBody Datos del usuario (correo y contrasenia) para autenticación.
+     * @param UserLogInBody Datos del usuario (mail y password) para autenticación.
      * @return ResponseEntity con la información del usuario si la autenticación es exitosa, o 404 si falla.
      */
     @PostMapping("/login")
