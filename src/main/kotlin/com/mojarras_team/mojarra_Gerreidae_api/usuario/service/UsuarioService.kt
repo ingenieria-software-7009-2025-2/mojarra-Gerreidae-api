@@ -56,7 +56,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param token un token para verificar que se haya iniciado sesión.
      * @return la información del usuario consultado o null si el token no es válido.
      */
-    fun obtenerUsuario(token : String) : User? {
+    fun obtenerUsuario(token : String) : User {
 
         val usuario = usuarioRepo.findByToken(token)
 
@@ -71,7 +71,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 token = usuario.token
             )
         } else {
-            throw NoSuchElementException("Este usuario no existe.")
+            throw IllegalArgumentException("El token es inválido para este usuario.")
         }
     }
 
@@ -82,7 +82,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param usuarioLogInBody objeto con el correo y contraseña.
      * @return el usuario que realizó el login o null si la contraseña es incorrecta.
      */
-    fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
+    fun logInUsuario(usuarioLogInBody : UserLogInBody) : User {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
             ?: throw NoSuchElementException("Este usuario no existe.")
         usuario.token = UUID.randomUUID().toString()
@@ -123,7 +123,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param token el token del usuario a modificar.
      * @param usuarioUpdateBody objeto con el id del usuario a actualizar.
      */
-    fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
+    fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User {
         val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario).getOrNull()
             ?: throw NoSuchElementException("Este usuario no existe.")
 
