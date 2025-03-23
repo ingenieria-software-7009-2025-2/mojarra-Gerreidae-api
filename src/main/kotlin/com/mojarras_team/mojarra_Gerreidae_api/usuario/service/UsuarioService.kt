@@ -26,6 +26,10 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      */
     fun crearUsuario(usuario : User) : User {
 
+        if(usuarioRepo.findByMail(usuario.correo) != null){
+            throw IllegalStateException("Este usuario ya se encuentra registrado.")
+        }
+
         val nuevoUsuarioDB = UserEntity(
             idUsuario = 0,
             nombre = usuario.nombre,
