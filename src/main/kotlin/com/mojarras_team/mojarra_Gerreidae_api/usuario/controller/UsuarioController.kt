@@ -3,6 +3,10 @@ package com.mojarras_team.mojarra_Gerreidae_api.usuario.controller
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.*
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.service.UsuarioService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/users")
+@Tag(name = "usuario", description = "Administración de usuarios")
 class UsuarioController (private var usuarioServicio : UsuarioService) {
-
 
     /**
      * Endpoint para crear un nuevo usuario
@@ -24,6 +28,14 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con la respuesta del servicio
      */
     @PostMapping()
+    @Operation(
+        summary = "Registrar usuario",
+        description = "Este endpoint permite registrar un nuevo usuario en la base de datos.",
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Usuario creado exitosamente"),
+        ApiResponse(responseCode = "400", description = "Error en los datos proporcionados")
+    ])
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
 
         val usuario = User(
@@ -40,13 +52,20 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         
     }
 
-
     /**
      * Endpoint para iniciar sesión
      * @param UserLogInBody Datos del usuario (mail y password) para autenticación.
      * @return ResponseEntity con la información del usuario si la autenticación es exitosa, o 404 si falla.
      */
     @PostMapping("/login")
+    @Operation(
+        summary = "Iniciar sesión de usuario",
+        description = "Este endpoint permite a un usuario iniciar sesión utilizando su correo y contraseña."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Autenticación exitosa, usuario logueado."),
+        ApiResponse(responseCode = "404", description = "Usuario no encontrado o credenciales incorrectas")
+    ])
     fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<Any>{
         val result = usuarioServicio.logInUsuario(userLogIn)
         return if (result != null)
@@ -61,6 +80,14 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * Recibe un objeto UserLogoutBody (que contiene el id del usuario) y elimina el token.
      */
     @PostMapping("/logout")
+    @Operation(
+        summary = "Cerrar sesión de usuario",
+        description = "Este endpoint permite a un usuario cerrar sesión eliminando su token de autenticación."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Sesión cerrada correctamente."),
+        ApiResponse(responseCode = "400", description = "Error al cerrar sesión.")
+    ])
     fun logOutUser(@RequestHeader("Authorization") token: String): ResponseEntity<String> {
         val salidaExitosa = usuarioServicio.logOutUsuario(token)
         return if (salidaExitosa > 0)
@@ -75,6 +102,14 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con la información del usuario o un estado 401 si no es válido.
      */
     @GetMapping("/me")
+    @Operation(
+        summary = "Obtener información del usuario autenticado",
+        description = "Este endpoint retorna la información del usuario asociado al token de autenticación."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Información del usuario obtenida correctamente."),
+        ApiResponse(responseCode = "401", description = "Token inválido o expirado.")
+    ])
     fun meUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
         val usuario = usuarioServicio.obtenerUsuario(token)
         return if (usuario != null)
@@ -91,6 +126,15 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con el usuario actualizado o un estado 401 si no es válido.
      */
     @PutMapping("/me")
+    @Operation(
+        summary = "Editar usuario autenticado",
+        description = "Este endpoint permite actualizar la información del usuario autenticado, utilizando el token para validación."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Información de usuario actualizada exitosamente."),
+        ApiResponse(responseCode = "401", description = "Token inválido."),
+        ApiResponse(responseCode = "400", description = "Error al actualizar los datos del usuario.")
+    ])
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
         val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
         return if (usuarioActualizado != null)
