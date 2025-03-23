@@ -8,6 +8,7 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpd
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -59,7 +60,6 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
         val usuario = usuarioRepo.findByToken(token)
 
-
         return if (usuario != null){
             User (
                 idUsuario = usuario.idUsuario,
@@ -71,7 +71,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 token = usuario.token
             )
         } else {
-            null
+            throw NoSuchElementException("Este usuario no existe.")
         }
     }
 
@@ -84,7 +84,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      */
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
         val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
-            ?: throw IllegalArgumentException("Este usuario no existe.")
+            ?: throw NoSuchElementException("Este usuario no existe.")
         usuario.token = UUID.randomUUID().toString()
         usuarioRepo.save(usuario)
         if (usuario.contrasenia == usuarioLogInBody.password){
@@ -98,7 +98,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 token = usuario.token
             )
         }
-        return null
+        throw IllegalArgumentException("La contraseña es incorrecta.")
     }
 
     /**
@@ -125,10 +125,12 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      */
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
         val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario).getOrNull()
-            ?: throw IllegalArgumentException("Este usuario no existe")
+            ?: throw NoSuchElementException("Este usuario no existe.")
 
-        if(usuarioObtenido.token == null || usuarioObtenido.token != token){
-            return null
+        if(usuarioObtenido.token == null){
+            throw IllegalArgumentException("La sesión de este usuario se encuentra cerrada.")
+        } else if (usuarioObtenido.token != token){
+            throw IllegalArgumentException("El Token dado no coincide con el token de el usuario.")
         }
 
         usuarioObtenido.nombre = usuarioUpdateBody.nombre ?: usuarioObtenido.nombre
