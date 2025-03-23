@@ -10,16 +10,16 @@ import jakarta.persistence.*
 data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idUsuario")
+    @Column(name = "id_usuario")
     val idUsuario: Int,
 
     @Column(name = "nombre", nullable = false)
     var nombre: String,
 
-    @Column(name = "apellidoP", nullable = false)
+    @Column(name = "apellido_p", nullable = false)
     var apellidoP: String,
 
-    @Column(name = "apellidoM", nullable = false)
+    @Column(name = "apellido_m", nullable = false)
     var apellidoM: String,
 
     @Column(name = "mail", nullable = false, unique = true)
