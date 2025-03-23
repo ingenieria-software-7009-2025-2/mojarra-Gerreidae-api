@@ -35,8 +35,12 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         contrasenia = userBody.password,
         token = null
         )
-        val creado = usuarioServicio.crearUsuario(usuario)
-        return ResponseEntity.ok(creado)
+        try {
+            val creado = usuarioServicio.crearUsuario(usuario)
+            return ResponseEntity.ok(creado)
+        } catch (e: IllegalStateException){
+            return ResponseEntity.status(409).build()
+        }
         
     }
 
