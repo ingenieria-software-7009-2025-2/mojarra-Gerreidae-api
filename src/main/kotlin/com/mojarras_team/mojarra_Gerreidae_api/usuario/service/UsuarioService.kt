@@ -133,8 +133,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param usuarioUpdateBody objeto con el id del usuario a actualizar.
      */
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
-        val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario).getOrNull()
-            ?: throw IllegalArgumentException("Este usuario no existe")
+        val usuarioObtenido = usuarioRepo.findByToken(token)?: throw IllegalArgumentException("Este usuario no existe")
 
         if(usuarioObtenido.token == null || usuarioObtenido.token != token){
             return null
