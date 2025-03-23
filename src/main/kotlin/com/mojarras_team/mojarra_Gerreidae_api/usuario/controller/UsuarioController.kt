@@ -47,13 +47,15 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      * @return ResponseEntity con la información del usuario si la autenticación es exitosa, o 404 si falla.
      */
     @PostMapping("/login")
-    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<Any>{
-        val result = usuarioServicio.logInUsuario(userLogIn)
-        return if (result != null)
-            ResponseEntity.ok(result)
-        else
-            ResponseEntity.notFound().build()
-
+    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
+        try {
+            val result = usuarioServicio.logInUsuario(userLogIn)
+            return ResponseEntity.ok(result)
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.notFound().build()
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 
     /**
@@ -76,11 +78,12 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      */
     @GetMapping("/me")
     fun meUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
-        val usuario = usuarioServicio.obtenerUsuario(token)
-        return if (usuario != null)
-            ResponseEntity.ok(usuario)
-        else
-            ResponseEntity.status(401).build()
+        try {
+            val usuario = usuarioServicio.obtenerUsuario(token)
+            return ResponseEntity.ok(usuario)
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 
     /**
@@ -92,10 +95,11 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
      */
     @PutMapping("/me")
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
-        val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
-        return if (usuarioActualizado != null)
-            ResponseEntity.ok(usuarioActualizado)
-        else
-            ResponseEntity.status(401).build()
+        try {
+            val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
+            return ResponseEntity.ok(usuarioActualizado)
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 }
