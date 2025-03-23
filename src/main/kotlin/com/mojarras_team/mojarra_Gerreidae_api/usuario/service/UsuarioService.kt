@@ -3,7 +3,6 @@ package com.mojarras_team.mojarra_Gerreidae_api.usuario.service
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.dominio.User
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.UserRepository
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogInBody
-import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserLogoutBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpdateBody
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
@@ -22,22 +21,25 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * Crea un nuevo usuario en la base de datos.
      *
      * @param usuario Nuevo usuario a agregar.
-     * @return El susuario que se creó.
+     * @return El usuario que se creó.
      */
     fun crearUsuario(usuario : User) : User {
-
-        if(usuarioRepo.findByMail(usuario.correo) != null){
+        if(usuarioRepo.findByMail(usuario.mail) != null){
             throw IllegalStateException("Este usuario ya se encuentra registrado.")
         }
+        var tokenNoRepetido: String
+        do {
+            tokenNoRepetido = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(tokenNoRepetido) != null)
 
         val nuevoUsuarioDB = UserEntity(
             idUsuario = 0,
             nombre = usuario.nombre,
             apellidoP = usuario.apellidoP,
             apellidoM = usuario.apellidoM,
-            correo = usuario.correo,
-            contrasenia = usuario.contrasenia,
-            token = UUID.randomUUID().toString()
+            mail = usuario.mail,
+            password = usuario.password,
+            token = tokenNoRepetido
         )
         val result = usuarioRepo.save(nuevoUsuarioDB)
 
@@ -46,8 +48,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = result.nombre,
             apellidoP = result.apellidoP,
             apellidoM = result.apellidoM,
-            correo = result.correo,
-            contrasenia = result.contrasenia,
+            mail = result.mail,
+            password = result.password,
             token = result.token
         )
         return usuarioCreado
@@ -70,8 +72,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
                 apellidoM = usuario.apellidoM,
-                correo = usuario.correo,
-                contrasenia = usuario.contrasenia,
+                mail = usuario.mail,
+                password = usuario.password,
                 token = usuario.token
             )
         } else {
@@ -81,24 +83,29 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     /**
      * Función para hacer el login de un usuario por medeio de su
-     * correo y contraseña.
+     * mail y password.
      *
-     * @param usuarioLogInBody objeto con el correo y contraseña.
-     * @return el usuario que realizó el login o null si la contraseña es incorrecta.
+     * @param usuarioLogInBody objeto con el mail y password.
+     * @return el usuario que realizó el login o null si la password es incorrecta.
      */
     fun logInUsuario(usuarioLogInBody : UserLogInBody) : User {
-        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
-            ?: throw NoSuchElementException("Este usuario no existe.")
-        usuario.token = UUID.randomUUID().toString()
+        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)?: throw NoSuchElementException("Este usuario no existe.")
+
+        var token: String
+        do {
+            token = UUID.randomUUID().toString()
+        } while (usuarioRepo.findByToken(token) != null)
+        usuario.token = token
         usuarioRepo.save(usuario)
-        if (usuario.contrasenia == usuarioLogInBody.password){
+
+        if (usuario.password == usuarioLogInBody.password){
             return User(
                 idUsuario = usuario.idUsuario,
                 nombre = usuario.nombre,
                 apellidoP = usuario.apellidoP,
                 apellidoM = usuario.apellidoM,
-                correo = usuario.correo,
-                contrasenia = usuario.contrasenia,
+                mail = usuario.mail,
+                password = usuario.password,
                 token = usuario.token
             )
         }
@@ -107,17 +114,16 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
 
     /**
      * Función para hacer el logout del usuario mediante su id.
-     *
-     * @param usuarioLogOutBody coneirne el id.
      * @return el número de filas que fueron modificadas en la tabla (1 si logout exitoso).
      */
-    fun logOutUsuario(usuarioLogOutBody : UserLogoutBody) : Int {
-        val usuarioDb = usuarioRepo.findById(usuarioLogOutBody.idUsuario).get()
-        usuarioDb.token = null
-        usuarioRepo.save(usuarioDb)
-        //val usuarioObtenido = usuarioRepo.deleteToken(usuarioLogOutBody.idUsuario)
-        //return usuarioObtenido
-        return 1
+    fun logOutUsuario(token: String) : Int {
+        val usuarioDb = usuarioRepo.findByToken(token)
+        if (usuarioDb != null) {
+            usuarioDb.token = null
+            usuarioRepo.save(usuarioDb)
+            return 1
+        }
+        return 0
     }
 
     /**
@@ -127,9 +133,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param token el token del usuario a modificar.
      * @param usuarioUpdateBody objeto con el id del usuario a actualizar.
      */
-    fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User {
-        val usuarioObtenido = usuarioRepo.findById(usuarioUpdateBody.idUsuario).getOrNull()
-            ?: throw NoSuchElementException("Este usuario no existe.")
+    fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
+        val usuarioObtenido = usuarioRepo.findByToken(token)?: throw IllegalArgumentException("Este usuario no existe")
 
         if(usuarioObtenido.token == null){
             throw IllegalArgumentException("La sesión de este usuario se encuentra cerrada.")
@@ -140,8 +145,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         usuarioObtenido.nombre = usuarioUpdateBody.nombre ?: usuarioObtenido.nombre
         usuarioObtenido.apellidoP = usuarioUpdateBody.apellidoP ?: usuarioObtenido.apellidoP
         usuarioObtenido.apellidoM = usuarioUpdateBody.apellidoM ?: usuarioObtenido.apellidoM
-        usuarioObtenido.correo = usuarioUpdateBody.mail ?: usuarioObtenido.correo
-        usuarioObtenido.contrasenia = usuarioUpdateBody.password ?: usuarioObtenido.contrasenia
+        usuarioObtenido.mail = usuarioUpdateBody.mail ?: usuarioObtenido.mail
+        usuarioObtenido.password = usuarioUpdateBody.password ?: usuarioObtenido.password
 
         usuarioRepo.save(usuarioObtenido)
 
@@ -150,8 +155,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             nombre = usuarioObtenido.nombre,
             apellidoP = usuarioObtenido.apellidoP,
             apellidoM = usuarioObtenido.apellidoM,
-            correo = usuarioObtenido.correo,
-            contrasenia = usuarioObtenido.contrasenia,
+            mail = usuarioObtenido.mail,
+            password = usuarioObtenido.password,
             token = usuarioObtenido.token
         )
         return  resultadoUsuarioAct
