@@ -8,7 +8,6 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEnt
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.NoSuchElementException
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * Clase para manejar la lógica del las peticiones HTTP relacionadas
