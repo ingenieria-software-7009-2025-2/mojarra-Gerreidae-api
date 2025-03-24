@@ -7,6 +7,7 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.controller.bodies.UserUpd
 import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEntity
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -23,7 +24,9 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @return El usuario que se creó.
      */
     fun crearUsuario(usuario : User) : User {
-
+        if(usuarioRepo.findByMail(usuario.mail) != null){
+            throw IllegalStateException("Este usuario ya se encuentra registrado.")
+        }
         var tokenNoRepetido: String
         do {
             tokenNoRepetido = UUID.randomUUID().toString()
@@ -59,7 +62,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param token un token para verificar que se haya iniciado sesión.
      * @return la información del usuario consultado o null si el token no es válido.
      */
-    fun obtenerUsuario(token : String) : User? {
+    fun obtenerUsuario(token : String) : User {
 
         val usuario = usuarioRepo.findByToken(token)
 
@@ -74,7 +77,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 token = usuario.token
             )
         } else {
-            null
+            throw IllegalArgumentException("El token es inválido para este usuario.")
         }
     }
 
@@ -85,15 +88,13 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
      * @param usuarioLogInBody objeto con el mail y password.
      * @return el usuario que realizó el login o null si la password es incorrecta.
      */
-    fun logInUsuario(usuarioLogInBody : UserLogInBody) : User? {
-        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)
-            ?: throw IllegalArgumentException("Este usuario no existe.")
+    fun logInUsuario(usuarioLogInBody : UserLogInBody) : User {
+        val usuario = usuarioRepo.findByMail(usuarioLogInBody.mail)?: throw NoSuchElementException("Este usuario no existe.")
 
         var token: String
         do {
             token = UUID.randomUUID().toString()
         } while (usuarioRepo.findByToken(token) != null)
-
         usuario.token = token
         usuarioRepo.save(usuario)
 
@@ -108,7 +109,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 token = usuario.token
             )
         }
-        return null
+        throw IllegalArgumentException("La contraseña es incorrecta.")
     }
 
     /**
@@ -135,8 +136,10 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
     fun updateUsuario(token: String, usuarioUpdateBody : UserUpdateBody) : User? {
         val usuarioObtenido = usuarioRepo.findByToken(token)?: throw IllegalArgumentException("Este usuario no existe")
 
-        if(usuarioObtenido.token == null || usuarioObtenido.token != token){
-            return null
+        if(usuarioObtenido.token == null){
+            throw IllegalArgumentException("La sesión de este usuario se encuentra cerrada.")
+        } else if (usuarioObtenido.token != token){
+            throw IllegalArgumentException("El Token dado no coincide con el token de el usuario.")
         }
 
         usuarioObtenido.nombre = usuarioUpdateBody.nombre ?: usuarioObtenido.nombre

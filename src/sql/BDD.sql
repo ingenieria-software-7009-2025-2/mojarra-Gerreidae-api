@@ -91,13 +91,13 @@ on update cascade on delete no action;
 --Creación de la tabla imagen actualización
 create table mojarra_esquema.imagen_actualizacion (
 	id_actualizacion serial not null,
-	id_imagenAct text not null,
+	id_imagen_act text not null,
 	imagen OID not null
 );
 
 -- Restricciones a la tabla imagen_incidente
 alter table mojarra_esquema.imagen_actualizacion
-add constraint pk_imagen_actualizacion primary key (id_imagenAct);
+add constraint pk_imagen_actualizacion primary key (id_imagen_act);
 
 alter table mojarra_esquema.imagen_actualizacion
 add constraint fk_imagen_actualizacion foreign key (id_actualizacion)

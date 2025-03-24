@@ -34,7 +34,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuario creado exitosamente"),
-        ApiResponse(responseCode = "400", description = "Error en los datos proporcionados")
+        ApiResponse(responseCode = "409", description = "El usuario ya se encuentra registrado")
     ])
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
 
@@ -47,8 +47,12 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
         password = userBody.password,
         token = null
         )
-        val creado = usuarioServicio.crearUsuario(usuario)
-        return ResponseEntity.ok(creado)
+        try {
+            val creado = usuarioServicio.crearUsuario(usuario)
+            return ResponseEntity.ok(creado)
+        } catch (e: IllegalStateException){
+            return ResponseEntity.status(409).build()
+        }
         
     }
 
@@ -64,15 +68,18 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Autenticación exitosa, usuario logueado."),
-        ApiResponse(responseCode = "404", description = "Usuario no encontrado o credenciales incorrectas")
+        ApiResponse(responseCode = "404", description = "Usuario no encontrado."),
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
-    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<Any>{
-        val result = usuarioServicio.logInUsuario(userLogIn)
-        return if (result != null)
-            ResponseEntity.ok(result)
-        else
-            ResponseEntity.notFound().build()
-
+    fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
+        try {
+            val result = usuarioServicio.logInUsuario(userLogIn)
+            return ResponseEntity.ok(result)
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.notFound().build()
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 
     /**
@@ -108,14 +115,15 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Información del usuario obtenida correctamente."),
-        ApiResponse(responseCode = "401", description = "Token inválido o expirado.")
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
     fun meUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
-        val usuario = usuarioServicio.obtenerUsuario(token)
-        return if (usuario != null)
-            ResponseEntity.ok(usuario)
-        else
-            ResponseEntity.status(401).build()
+        try {
+            val usuario = usuarioServicio.obtenerUsuario(token)
+            return ResponseEntity.ok(usuario)
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 
     /**
@@ -132,14 +140,14 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Información de usuario actualizada exitosamente."),
-        ApiResponse(responseCode = "401", description = "Token inválido."),
-        ApiResponse(responseCode = "400", description = "Error al actualizar los datos del usuario.")
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
-        val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
-        return if (usuarioActualizado != null)
-            ResponseEntity.ok(usuarioActualizado)
-        else
-            ResponseEntity.status(401).build()
+        try {
+            val usuarioActualizado = usuarioServicio.updateUsuario(token, userUpdate)
+            return ResponseEntity.ok(usuarioActualizado)
+        } catch (e: IllegalArgumentException){
+            return ResponseEntity.status(401).build()
+        }
     }
 }
