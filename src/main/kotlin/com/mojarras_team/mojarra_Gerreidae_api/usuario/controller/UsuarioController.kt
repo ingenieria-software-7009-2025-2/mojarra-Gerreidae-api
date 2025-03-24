@@ -34,7 +34,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuario creado exitosamente"),
-        ApiResponse(responseCode = "400", description = "Error en los datos proporcionados")
+        ApiResponse(responseCode = "409", description = "El usuario ya se encuentra registrado")
     ])
     fun createUser(@RequestBody userBody : UserBody) : ResponseEntity<User>{
 
@@ -68,7 +68,8 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Autenticación exitosa, usuario logueado."),
-        ApiResponse(responseCode = "404", description = "Usuario no encontrado o credenciales incorrectas")
+        ApiResponse(responseCode = "404", description = "Usuario no encontrado."),
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
     fun logInUser(@RequestBody userLogIn : UserLogInBody) : ResponseEntity<User>{
         try {
@@ -114,7 +115,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Información del usuario obtenida correctamente."),
-        ApiResponse(responseCode = "401", description = "Token inválido o expirado.")
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
     fun meUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
         try {
@@ -139,8 +140,7 @@ class UsuarioController (private var usuarioServicio : UsuarioService) {
     )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Información de usuario actualizada exitosamente."),
-        ApiResponse(responseCode = "401", description = "Token inválido."),
-        ApiResponse(responseCode = "400", description = "Error al actualizar los datos del usuario.")
+        ApiResponse(responseCode = "401", description = "Credenciales incorrectas.")
     ])
     fun updateUser(@RequestHeader("Authorization") token : String, @RequestBody userUpdate : UserUpdateBody) : ResponseEntity<User> {
         try {
