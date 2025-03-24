@@ -8,7 +8,6 @@ import com.mojarras_team.mojarra_Gerreidae_api.usuario.repository.entity.UserEnt
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.NoSuchElementException
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * Clase para manejar la lógica del las peticiones HTTP relacionadas
@@ -39,7 +38,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             apellidoM = usuario.apellidoM,
             mail = usuario.mail,
             password = usuario.password,
-            token = tokenNoRepetido
+            token = tokenNoRepetido,
+            esAdministrador = usuario.esAdministrador
         )
         val result = usuarioRepo.save(nuevoUsuarioDB)
 
@@ -50,7 +50,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             apellidoM = result.apellidoM,
             mail = result.mail,
             password = result.password,
-            token = result.token
+            token = result.token,
+            esAdministrador = result.esAdministrador
         )
         return usuarioCreado
     }
@@ -74,7 +75,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 apellidoM = usuario.apellidoM,
                 mail = usuario.mail,
                 password = usuario.password,
-                token = usuario.token
+                token = usuario.token,
+                esAdministrador = usuario.esAdministrador
             )
         } else {
             throw IllegalArgumentException("El token es inválido para este usuario.")
@@ -106,7 +108,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
                 apellidoM = usuario.apellidoM,
                 mail = usuario.mail,
                 password = usuario.password,
-                token = usuario.token
+                token = usuario.token,
+                esAdministrador = usuario.esAdministrador
             )
         }
         throw IllegalArgumentException("La contraseña es incorrecta.")
@@ -147,6 +150,7 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
         usuarioObtenido.apellidoM = usuarioUpdateBody.apellidoM ?: usuarioObtenido.apellidoM
         usuarioObtenido.mail = usuarioUpdateBody.mail ?: usuarioObtenido.mail
         usuarioObtenido.password = usuarioUpdateBody.password ?: usuarioObtenido.password
+        usuarioObtenido.esAdministrador = usuarioObtenido.esAdministrador
 
         usuarioRepo.save(usuarioObtenido)
 
@@ -157,7 +161,8 @@ class UsuarioService (private var usuarioRepo : UserRepository) {
             apellidoM = usuarioObtenido.apellidoM,
             mail = usuarioObtenido.mail,
             password = usuarioObtenido.password,
-            token = usuarioObtenido.token
+            token = usuarioObtenido.token,
+            esAdministrador = usuarioObtenido.esAdministrador
         )
         return  resultadoUsuarioAct
     }

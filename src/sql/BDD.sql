@@ -10,7 +10,8 @@ create table mojarra_esquema.usuario (
     apellido_m text not null,
     mail text not null,
     password text not null,
-    token text
+    token text,
+    es_administrador int not null
 );
 
 -- Restricciones a la tabla usuario
