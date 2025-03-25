@@ -1,0 +1,20 @@
+El objetivo de este documento es proporcionar una vista general para el desarrollo de un sistema destinado a la gestión de incidentes urbanos. Se abordarán los aspectos clave para el desarrollo de dicho sistema, como los requerimientos funcionales y no funcionales,  el diseño de la arquitectura y las fases del desarrollo.
+
+Durante el desarrollo del proyecto se busca llevar a cabo un método incremental que permita entregar en cada fase resultados parciales que puedan ser validados por el cliente.
+
+\subsection{Propósito del sistema.}
+
+Se busca desarrollar una página web para el registro y gestión de incidentes urbanos por medio de la participación activa de los ciudadanos. Esto con el fin de a largo plazo hacer uso de los datos recopilados para la optimización de la resolución y seguimiento brindado por las autoridades gubernamentales.
+
+\subsection{Alcance del sistema.}
+
+Dado que el proyecto busca fomentar la participación de la ciudadanía, la funcionalidad prioritaria será permitir a los usuarios (ciudadanos de la CDMX) registrarse en la plataforma web, lo que les habilitará para crear, actualizar y visualizar incidentes relacionados con la vía pública. Los registros de incidentes incluirán información esencial como la ubicación y una descripción del problema, permitiendo un seguimiento adecuado.
+
+\subsection{Definiciones y abreviaciones.}
+\begin{itemize}
+    \item Salting: Técnica criptográfica que consiste en añadir un valor aleatorio único (llamado salt) a cada contraseña antes de calcular su hash. 
+    \item Hashing: Forma de cifrar las contraseñas a través de una función hash criptográfica. Esto para tener más seguridad.
+    \item Estado de un accidente: Puede ser "Reportado", "En proceso" o "Resuelto". Se refiere a etiquetas asociadas a los accidentes registrados.
+    \item MojarraDrive: Nombre de la página web a implementar.
+\end{itemize}
+
