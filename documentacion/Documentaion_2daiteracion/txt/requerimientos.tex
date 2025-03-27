@@ -1,0 +1,41 @@
+\subsubsection{Requerimientos funcionales}
+\begin{itemize}
+    \item Creación de cuentas para los usuarios de la página.
+    
+    El sistema debe permitir a cada nuevo usuario crear una cuenta que lo identifique como ciudadano y resguardar su información para posteriores ingresos a la plataforma. 
+    
+    \item Registro de incidentes.
+    
+    Se debe permitir a los usuarios llevar un registro de los incidentes que reportan. Cada incidente deberá incluir la ubicación, al menos una fotografía, un estado (Reportado, En proceso, Resuelto) y una descripción. Además, por cuestiones de administración de la información, se debe contar con una forma de clasificar los incidentes y poder identificar al usuario que los reporta.
+    
+    \item Clasificación de incidentes.
+    
+    Además de tener asociado un estado (Reportado, En proceso, Resuelto), cada incidente debe clasificarse por tipo (por ejemplo: bache, luminaria descompuesta, obstáculo en vía pública, entre otros).
+    
+    \item Actualización del estado de los incidentes.
+    
+    Es importante que el sistema permita a los usuarios actualizar el estado de los incidentes (aunque no hayan sido ellos quienes los registraron), siempre y cuando adjunten al menos una fotografía que respalde el cambio de estado.
+    
+    \item Visualización y filtrado de incidentes.
+    
+    La página debe permitir a los usuarios marcar la ubicación de los incidentes que reportan en un mapa interactivo. Además, todos los usuarios deben poder ver los incidentes reportados en la página y filtrarlos por tipo y estado.
+
+\end{itemize}
+
+\subsubsection{Requerimientos no funcionales}
+\begin{itemize}
+    \item Delimitación de roles\\
+    El sistema no debe de permitir a un usuario que no cuenta con los permisos necesarios realizar operaciones que solo usuarios privilegiados (Administradores, Etc.) puedan realizar.
+    \item Delimitación de usuarios\\
+    El sistema no puede permitir que un usuario que no es el dueño de un reporte pueda realizar acciones como la eliminación del reporte, cambio de ubicación de este, cambio de descripción del reporte, cambio de clasificación del incidente.
+    \item Inicio de sesión seguro\\
+    El sistema debe de usar tecnología de inicio de sesión segura, ya sea utilizar un sistema de inicio de sesión popular (Inicio de sesión con cuenta de Google, Facebook) o bien utilizar un sistema de inicio de sesión desarrollado propiamente. El cuál no permita el acceso a cuentas no registradas, no permita duplicidad de cuentas, es decir, una sola cuenta puede estar asociada solo con un correo electrónico. Por último el sistema debe de ser capaz de solo aceptar correos electrónicos válidos.
+    \item Contraseñas seguras\\
+    Al momento de hacer el registro de un nuevo usuario, el sistema debe de revisar si la contraseña introducida por el usuario cuenta con la mínima seguridad indispensable (Por lo menos una letra mayúscula, Un caracter especial, Por lo menos un número, etc). En caso de no contar con esta información, se debe de indicar al usuario que debe de corregir antes de poder registrar a su cuenta.
+    \item Validación de campos\\
+    El sistema debe de validar los campos que el usuario debe de introducir para evitar situaciones de seguridad como la inyección de código.
+    \item Protección de contraseñas\\
+    Las contraseñas de usuario deben de estar guardadas con un estándar de cifrado usado comúnmente y seguro, de la misma manera se debe de usar un proceso de ''salting" para proveer más seguridad a los usuarios.
+\end{itemize}
+
+%\subsection{Requerimientos de dominio}

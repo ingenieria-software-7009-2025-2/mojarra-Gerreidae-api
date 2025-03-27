@@ -29,5 +29,8 @@ data class UserEntity(
     var password: String,
 
     @Column(name = "token")
-    var token: String? = null
+    var token: String? = null,
+
+    @Column(name = "es_administrador")
+    var esAdministrador: Int
 )
